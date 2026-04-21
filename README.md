@@ -1,346 +1,171 @@
-🚀 DevOps End-to-End Project (Terraform + Jenkins + Docker + AWS)
+# 🚀 DevOps Project – End-to-End Implementation
 
-📌 Project Overview
+## 📌 Project Overview
 
 This project demonstrates a complete end-to-end DevOps workflow including:
 
-- Infrastructure provisioning using Terraform
-- Application deployment using Docker
-- CI/CD pipeline using Jenkins
-- Monitoring using AWS CloudWatch
-- Drift detection using Terraform
+- Infrastructure provisioning using Terraform  
+- Application deployment using Docker  
+- CI/CD pipeline using Jenkins  
+- Monitoring and logging using AWS CloudWatch  
 
-The focus is on real-world DevOps practices, not application development.
-
----
-
-🏗️ Architecture
-
-The system is deployed on AWS with the following components:
-
-- VPC ("10.0.0.0/16")
-- Public Subnet ("10.0.1.0/24")
-- Private Subnet ("10.0.3.0/24")
-- Internet Gateway & Route Tables
-- EC2 Instance (t2.micro / t3.micro)
-- Dockerized Tomcat Application
-- RDS PostgreSQL Database
-- Application Load Balancer (ALB)
-- Security Groups
-- CloudWatch Monitoring & Logging
+The focus of this project is to implement real-world DevOps practices such as automation, scalability, and observability.
 
 ---
 
-⚙️ Tools & Technologies
+## 🏗️ Architecture
 
-- Terraform (Infrastructure as Code)
-- AWS (EC2, VPC, RDS, ALB, CloudWatch)
-- Docker (Tomcat container)
-- Jenkins (CI/CD)
-- Git & GitHub
+The application is deployed on AWS using the following components:
+
+- VPC with custom CIDR (10.0.0.0/16)
+- Public Subnet for application hosting
+- EC2 instance to run Docker container
+- Dockerized Tomcat application
+- RDS PostgreSQL database
+- Application Load Balancer (ALB) for public access
+- Security Groups for controlled access
+- CloudWatch for monitoring and logging
 
 ---
 
-🛠️ Infrastructure Provisioning (Terraform)
+## ⚙️ Infrastructure (Terraform)
 
-Infrastructure is fully automated using Terraform.
+Infrastructure is provisioned using Terraform (Infrastructure as Code).
 
-Resources Created:
+### Resources Created:
+- VPC and Subnets  
+- EC2 Instance  
+- RDS PostgreSQL  
+- Application Load Balancer  
+- Security Groups  
 
-- VPC and Subnets
-- EC2 Instance
-- RDS PostgreSQL
-- Application Load Balancer
-- Security Groups
+### Commands:
 
-Commands:
-
+bash
 terraform init
 terraform plan
 terraform apply
 
-Notes:
 
-- Variables managed in "variables.tf"
-- Outputs defined in "outputs.tf"
-- Sensitive values moved to ".tfvars" (not committed)
+### Configuration:
+- Variables managed in variables.tf
+- Outputs defined in outputs.tf
+- Sensitive values handled using .tfvars (not committed)
 
 ---
 
-🐳 Application Deployment
+## 🐳 Application Deployment
 
-- Application deployed using Docker on EC2
-- Tomcat container used for Java application
+- Application is containerized using Docker  
+- Tomcat is used as the application server  
 
-Run container:
+### Run container:
 
+bash
 docker run -d -p 8080:8080 tomcat
 
----
 
-🔄 CI/CD Pipeline (Jenkins)
-
-CI/CD pipeline automates build and deployment.
-
-Pipeline Flow:
-
-1. Code pushed to GitHub
-2. Jenkins pipeline triggered
-3. Build process starts
-4. Docker image created
-5. Application deployed to EC2
-6. Manual approval before production
-
-
-Features:
-
-- Automated deployment
-- Continuous integration
-- Manual approval gate
+- Application runs on EC2 instance  
+- Exposed via Load Balancer  
 
 ---
 
-📊 Monitoring & Logging (CloudWatch)
+## 🔄 CI/CD Pipeline (Jenkins)
+
+A Jenkins pipeline is used to automate deployment.
+
+### Pipeline Flow:
+
+1. Code pushed to GitHub  
+2. Jenkins pipeline triggered  
+3. Build process executed  
+4. Docker image created  
+5. Application deployed to EC2  
+6. Manual approval step before production  
+
+### Key Features:
+
+- Automated deployment  
+- Continuous integration  
+- Controlled production release  
+
+---
+
+## 📊 Monitoring & Logging
 
 Monitoring is implemented using AWS CloudWatch.
 
-Infrastructure Monitoring:
+### Infrastructure Monitoring:
+- CPU utilization  
+- Memory usage (via CloudWatch Agent)  
+- Disk usage  
 
-- CPU Utilization
-- Memory Usage (via CloudWatch Agent)
-- Disk Usage
+### Application Monitoring:
+- Tomcat logs  
+- Docker container logs  
 
-Application Monitoring:
-
-- Tomcat logs
-- Docker container logs
-
-Logging Setup:
-
-- Centralized logging using CloudWatch Logs
+### Logging:
+- Centralized logging using CloudWatch Logs  
 - Logs collected from:
-  - System logs
-  - Docker container logs
-
-Important Implementation:
-
-CloudWatch Agent configured to read Docker logs from:
-
-/var/lib/docker/containers/<container-id>/<container-id>-json.log
+  - System logs  
+  - Docker container logs  
 
 ---
 
-📈 Dashboards
+## 📈 Dashboards
 
-Two dashboards were created:
+Two dashboards are created:
 
-1. Infrastructure Dashboard
+### Infrastructure Dashboard:
+- CPU usage  
+- Memory usage  
+- Disk usage  
 
-- CPU usage
-- Memory usage
-- Disk usage
-
-2. Application Dashboard
-
-- Log monitoring
-- Error tracking
+### Application Dashboard:
+- Log monitoring  
+- Error tracking  
 
 ---
 
-🔍 Drift Detection (Terraform)
+## 🔐 Security
 
-📌 What is Drift?
-
-Drift occurs when infrastructure is changed manually outside Terraform, causing mismatch between:
-
-- Terraform state
-- Actual AWS infrastructure
+- Security groups restrict access to required ports only  
+- IAM roles used instead of hardcoded credentials  
+- Sensitive data not stored in repository  
 
 ---
 
-🛠️ Implementation
+## 💰 Cost Optimization
 
-1. Manually modified AWS resource (EC2 / Security Group)
-2. Ran:
-
-terraform plan
-
----
-
-⚠️ Result
-
-Terraform detected differences between expected and actual state:
-
-~ instance_type = "t3.micro" -> "t2.micro"
+- Used minimal instance type (t2.micro / t3.micro)  
+- Limited log retention  
+- Avoided unnecessary resources  
 
 ---
 
-✅ Resolution
+## 🌐 Live Application
 
-Option 1: Revert Changes
+Application is accessible via AWS Load Balancer:
 
-terraform apply
-
-Option 2: Accept Changes
-
-- Update Terraform code
-- Apply again
-
----
-
-🎯 Importance
-
-- Ensures infrastructure consistency
-- Prevents configuration mismatch
-- Critical in production environments
-
----
-
-🔐 Security Best Practices
-
-- No hardcoded credentials in code
-- ".tfvars" excluded using ".gitignore"
-- IAM roles used instead of credentials
-- Recommended:
-  - AWS Secrets Manager
-  - SSM Parameter Store
-
----
-
-💰 Cost Optimization
-
-- Used small instance types (t2.micro / t3.micro)
-- Limited log retention
-- Avoided unnecessary resources
-
----
-
-⚠️ Challenges & Solutions
-
-1. Git Push Rejected
-
-Issue:
-
-failed to push some refs
-
-Reason:
-Remote repository already had commits
-
-Solution:
-
-git pull origin main --rebase
-git push origin main
-
----
-
-2. Hardcoded Password
-
-Issue:
-Password stored in Terraform code
-
-Solution:
-
-- Removed default value
-- Used ".tfvars"
-- Added to ".gitignore"
-
----
-
-3. Docker Logs Not Visible in CloudWatch
-
-Issue:
-Logs inside container not accessible
-
-Solution:
-Used Docker host log path:
-
-/var/lib/docker/containers/
-
----
-
-4. CloudWatch Agent Issues
-
-Issue:
-Agent not collecting logs properly
-
-Solution:
-
-- Reconfigured agent
-- Validated JSON config
-
----
-
-5. Database Connection Issues
-
-Issue:
-Application not connecting to RDS
-
-Solution:
-
-- Fixed configuration
-- Verified schema and connection using logs
-
----
-
-▶️ How to Run the Project
-
-1. Clone repository
-2. Run Terraform:
-
-terraform init
-terraform apply
-
-3. Deploy Docker container
-4. Setup Jenkins pipeline
-5. Access app via Load Balancer
-
-
-🌐 Live Application
-
-The application is accessible via AWS Application Load Balancer:
 
 http://app-lb-1259709467.eu-north-1.elb.amazonaws.com/app/
 
-✔ Verification
-
-- Application is running on EC2 via Docker
-- Traffic is routed through ALB
-- Infrastructure provisioned using Terraform
 
 ---
 
-📁 Project Structure
+## ▶️ How to Run
 
-terraform/
-│── main.tf
-│── variables.tf
-│── outputs.tf
-│── terraform.tfvars (ignored)
-│── .gitignore
-
----
-
-📌 Future Improvements
-
-- CI/CD automation without manual steps
-- Remote Terraform backend (S3 + DynamoDB)
-- Auto drift detection using pipelines
-- Auto-scaling setup
-- Full container orchestration (ECS/EKS)
+1. Clone repository  
+2. Run Terraform:
+   bash
+   terraform init
+   terraform apply
+   
+3. Deploy Docker container  
+4. Access application via Load Balancer  
 
 ---
 
-📦 Deliverables
-
-- Terraform scripts
-- CI/CD pipeline
-- Monitoring setup
-- GitHub repository
-- Documentation
-
----
-
-👨‍💻 Author
+## 👨‍💻 Author
 
 Atharva Awajekar
-
