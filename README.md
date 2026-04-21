@@ -91,6 +91,7 @@ Pipeline Flow:
 5. Application deployed to EC2
 6. Manual approval before production
 
+
 Features:
 
 - Automated deployment
@@ -292,6 +293,19 @@ terraform apply
 3. Deploy Docker container
 4. Setup Jenkins pipeline
 5. Access app via Load Balancer
+
+
+🌐 Live Application
+
+The application is accessible via AWS Application Load Balancer:
+
+http://app-lb-1259709467.eu-north-1.elb.amazonaws.com/app/
+
+✔ Verification
+
+- Application is running on EC2 via Docker
+- Traffic is routed through ALB
+- Infrastructure provisioned using Terraform
 
 ---
 
