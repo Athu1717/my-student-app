@@ -1,9 +1,7 @@
-FROM eclipse-temurin:17-jdk-jammy
+FROM tomcat:9.0-jdk17-temurin
 
-WORKDIR /app
-
-COPY target/*.jar app.jar
+COPY target/*.war /usr/local/tomcat/webapps/app.war
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","app.jar"]
+CMD ["catalina.sh","run"]
